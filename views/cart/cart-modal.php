@@ -12,6 +12,7 @@ if (!empty($session['cart'])):?>
                 <th>Наименование</th>
                 <th>Кол-во</th>
                 <th>Цена</th>
+                <th>Сумма</th>
                 <td><span class="glyphicon glyphicon-remove " aria-hidden="true"></span></td>
             </tr>
             </thead>
@@ -25,6 +26,7 @@ if (!empty($session['cart'])):?>
                     <td><?= $item['name'] ?></td>
                     <td><?= $item['qty'] ?></td>
                     <td><?= $item['price'] ?></td>
+                    <td><?= $item['qty'] * $item['price'] ?></td>
                     <td> <!--крестик для удаление товара-->
                         <span data-id="<?= $id ?>" class="glyphicon glyphicon-remove text-danger del-item"
                               aria-hidden="true"></span>

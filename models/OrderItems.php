@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use yii\db\ActiveRecord;
 use Yii;
 
 /**
@@ -17,7 +17,7 @@ use Yii;
  *
  * @property Order $order
  */
-class OrderItems extends \yii\db\ActiveRecord
+class OrderItems extends ActiveRecord
 {
     /**
      * {@inheritdoc}

@@ -3,6 +3,7 @@
 namespace app\models;
 use yii\db\ActiveRecord;
 use Yii;
+use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -31,12 +32,33 @@ class Order extends ActiveRecord
         return 'order';
     }
 
+
+
+    public function behaviors()
+    {
+
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                // если вместо метки времени UNIX используется datetime:
+                 'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
+            [['name', 'email', 'phone', 'address'], 'required'],
             [['created_at', 'updated_at'], 'safe'],
             [['qty'], 'integer'],
             [['sum'], 'number'],
@@ -58,10 +80,10 @@ class Order extends ActiveRecord
             'qty' => 'Qty',
             'sum' => 'Sum',
             'status' => 'Status',
-            'name' => 'Name',
+            'name' => 'Имя',
             'email' => 'Email',
-            'phone' => 'Phone',
-            'address' => 'Address',
+            'phone' => 'Телефон',
+            'address' => 'Адрес',
         ];
     }
 
