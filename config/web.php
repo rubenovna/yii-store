@@ -10,6 +10,17 @@ $config = [
     'language' => 'ru-RU',
     'defaultRoute' => 'category/index',
 
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\Module',
+            'layout' => 'admin',
+            'defaultRoute' => 'order/index',
+        ],
+    ],
+
+
+
+
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -26,6 +37,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            //'loginUrl' => '/cart/view',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

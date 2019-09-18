@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
+use Yii;
 /* @var $this yii\web\View */
 
 
@@ -224,6 +225,7 @@ use yii\helpers\Url;
 
                 </div>
             </div>
+
 
             <div class="col-sm-9 padding-right">
                 <?php if(!empty($hits)):?>

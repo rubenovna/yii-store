@@ -1,7 +1,7 @@
 <?php
 
-namespace app\models;
-use yii\db\ActiveRecord;
+namespace app\modules\admin\models;
+
 use Yii;
 
 /**
@@ -17,7 +17,7 @@ use Yii;
  *
  * @property Order $order
  */
-class OrderItems extends ActiveRecord
+class OrderItems extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -61,6 +61,6 @@ class OrderItems extends ActiveRecord
      */
     public function getOrder()
     {
-        return $this->hasOne(Order::class(), ['id' => 'order_id']);
+        return $this->hasOne(Order::className(), ['id' => 'order_id']);
     }
 }

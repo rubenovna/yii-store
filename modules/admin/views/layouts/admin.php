@@ -6,7 +6,6 @@
 
 use app\widgets\Alert;
 use yii\helpers\Html;
-use Yii;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
@@ -24,17 +23,10 @@ AppAsset::register($this);
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php $this->registerCsrfMetaTags() ?>
-        <title><?= Html::encode($this->title) ?></title>
+        <title>АДМИНКА | <?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
 
-        <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
-        <!--   <link href="css/font-awesome.min.css" rel="stylesheet">
-           <link href="css/prettyPhoto.css" rel="stylesheet">
-           <link href="css/price-range.css" rel="stylesheet">
-           <link href="css/animate.css" rel="stylesheet">
-           <link href="css/main.css" rel="stylesheet">
-           <link href="css/responsive.css" rel="stylesheet">-->
-        <!--[if lt IE 9]>
+
         <script src="js/html5shiv.js"></script>
         <script src="js/respond.min.js"></script>
         <![endif]-->
@@ -114,19 +106,21 @@ AppAsset::register($this);
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
 
+                                <?php if (!Yii::$app->user->isGuest): ?>
 
-                                    <li> <?php if (!Yii::$app->user->isGuest): ?>
-                                        <?= Html::beginForm(['/site/logout'], 'post')?><i class="fa fa-user"></i>
-                                            <?= Html::submitButton(
-                                                'Выход ('.Yii::$app->user->identity->username.')',
-                                                ['class' => 'btn btn-link logout']) . Html::endForm() ?>
-                                        <?php endif;?>
+                                    <li>  <?php echo Html::beginForm(['/site/logout'], 'post') ?><i
+                                                class="fa fa-user"></i>
+                                        <?= Html::submitButton(
+                                            'Выход (' . Yii::$app->user->identity->username . ')',
+                                            ['class' => 'btn btn-link logout']) . Html::endForm() ?>
                                     </li>
 
+                                <?php endif; ?>
                                 <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
                                 <li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-                                <li><a href="#" onclick="return getCart()"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-                                <li><a href="<?= Url::to(['/admin'])?>"><i class="fa fa-lock"></i> Login</a></li>
+                                <li><a href="#" onclick="return getCart()"><i class="fa fa-shopping-cart"></i> Cart</a>
+                                </li>
+                                <li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>
                             </ul>
                         </div>
                     </div>
@@ -150,28 +144,26 @@ AppAsset::register($this);
                         <div class="mainmenu pull-left">
                             <ul class="nav navbar-nav collapse navbar-collapse">
                                 <li>
-                                    <a href="<?= Url::home() ?>">Home</a>
+                                    <a href="<?= Url::to(['/admin']) ?>">Home</a>
                                 </li>
 
 
                                 <!--<a href="index.html" class="active"></a></li>-->
-                                <li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
+                                <li class="dropdown"><a href="#">Категории<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
-                                        <li><a href="shop.html">Products</a></li>
-                                        <li><a href="product-details.html">Product Details</a></li>
-                                        <li><a href="checkout.html">Checkout</a></li>
-                                        <li><a href="cart.html">Cart</a></li>
-                                        <li><a href="login.html">Login</a></li>
+                                        <li><a href="<?= Url::to(['category/index']) ?>">Список категорий</a></li>
+
+                                        <li><a href="<?= Url::to(['category/create']) ?>">Добавить категорию</a></li>
+
                                     </ul>
                                 </li>
-                                <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
+
+                                <li class="dropdown"><a href="">Товарй<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
-                                        <li><a href="blog.html">Blog List</a></li>
-                                        <li><a href="blog-single.html">Blog Single</a></li>
+                                        <li><a href="<?= Url::to(['products/index'])?>">Список товаров</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="404.html">404</a></li>
-                                <li><a href="contact-us.html">Contact</a></li>
+
                             </ul>
                         </div>
                     </div>
@@ -189,8 +181,10 @@ AppAsset::register($this);
             </div>
         </div><!--/header-bottom-->
     </header><!--/header-->
+    <div class="container">
+        <?= $content ?> <!--не могу понять как это переменная связывается с файлом index.php-->
+    </div>
 
-    <?= $content ?> <!--не могу понять как это переменная связывается с файлом index.php-->
 
     <footer id="footer"><!--Footer-->
         <div class="footer-top">
@@ -351,29 +345,8 @@ AppAsset::register($this);
         </div>
 
     </footer><!--/Footer-->
-    <!--
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.scrollUp.min.js"></script>
-    <script src="js/price-range.js"></script>
-    <script src="js/jquery.prettyPhoto.js"></script>
-    <script src="js/jquery.cookie.js"></script>
-    <script src="js/jquery.accordion.js"></script>
-    <script src="js/main.js"></script>-->
 
-    <?php
-    Modal::begin([
-            'header' => '<h2>Карзина</h2>',
-            'id' => 'cart',
-            //'size' => 'modal-lg',
-            'footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">Продолжить покупки</button>
-   <a href="' . Url::to(['/cart/view']).'" class="btn btn-danger" onclick="clearCart()">Оформить заказ</a>
-     <button type="button" class="btn btn-danger" onclick="clearCart()">Очистить корзину</button>'
-        ]
 
-    );
-    Modal::end();
-    ?>
     <?php $this->endBody() ?>
 
     </body>
