@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ProductsController implements the CRUD actions for Products model.
@@ -67,11 +68,13 @@ class ProductsController extends Controller
         $model = new Products();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Товар {$model->name} добавлен");
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
+
         ]);
     }
 
@@ -87,7 +90,30 @@ class ProductsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+            $model->image = UploadedFile::getInstance($model, 'image');
+            if( $model->image ){
+               /* $model->upload();*/
+                /*if($model->validate()) {*/
+                    $path = 'upload/store/' . $model->image->baseName . '.' . $model->image->extension;
+                    $model->image->saveAs($path);
+                    $model->attachImage($path, true);
+              /*  }*/
+            }
+            unset($model->image);
+            $model->gallery = UploadedFile::getInstances($model, 'gallery');
+           // $model->uploadGallery();
+            foreach ($model->gallery as $file) {
+                $path = 'upload/store/' . $file->baseName . '.' . $file->extension;
+                $file->saveAs($path);
+                $model->attachImage($path);
+                @unlink($path);
+            }
+
+
+
+            Yii::$app->session->setFlash('success', 'Изменения сохранены.');
+            return $this->redirect(['view', 'id' => $model->id, 'gallery' => $model ->gallery]);
         }
 
         return $this->render('update', [
@@ -105,6 +131,7 @@ class ProductsController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+        Yii::$app->session->setFlash('success', 'Изменения сохранены.');
 
         return $this->redirect(['index']);
     }

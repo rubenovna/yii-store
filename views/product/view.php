@@ -162,35 +162,36 @@ use yii\helpers\Url;
             <?php /*var_dump($product); */ ?><!--
             --><?php /*var_dump($product->category); */ ?>
 
+            <?php
+            $mainImg = $product->getImage();
+            $gallery = $product->getImages();/* var_dump($mainImg, $gallery)*/;
+            ?>
+
+
             <div class="col-sm-9 padding-right">
                 <div class="product-details"><!--product-details-->
                     <div class="col-sm-5">
                         <div class="view-product">
 
-                            <?= Html::img("@web/images/products/{$product->img}", ['alt' => $product->name]) ?>
+                            <?= Html::img($mainImg->getUrl(), ['alt' => $product->name]) ?>
                             <h3>ZOOM</h3>
                         </div>
                         <div id="similar-product" class="carousel slide" data-ride="carousel">
 
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner">
-                                <div class="item active">
-                                    <a href=""><img src="/images/product-details/similar1.jpg" alt=""></a>
-                                    <a href=""><img src="/images/product-details/similar2.jpg" alt=""></a>
-                                    <a href=""><img src="/images/product-details/similar3.jpg" alt=""></a>
-                                </div>
-                                <div class="item">
-                                    <a href=""><img src="/images/product-details/similar1.jpg" alt=""></a>
-                                    <a href=""><img src="/images/product-details/similar2.jpg" alt=""></a>
-                                    <a href=""><img src="/images/product-details/similar3.jpg" alt=""></a>
-                                </div>
-                                <div class="item">
-                                    <a href=""><img src="/images/product-details/similar1.jpg" alt=""></a>
-                                    <a href=""><img src="/images/product-details/similar2.jpg" alt=""></a>
-                                    <a href=""><img src="/images/product-details/similar3.jpg" alt=""></a>
-                                </div>
-
+                                <!-- выводим картинки в галерии, под главной картиной-->
+                                <?php $count = count($gallery); $i = 0; foreach($gallery as $img): ?>
+                                    <?php if($i % 3 == 0):?>
+                                        <div class="item <?php if($i == 0) echo ' active'?>">
+                                    <?php endif;?>
+                                    <a href=""><?= Html::img($img->getUrl('84x85'), ['alt' => ''])?></a>
+                                    <?php $i++; if($i % 3 == 0 || $i == $count):?>
+                                        </div>
+                                    <?php endif;?>
+                                <?php endforeach;?>
                             </div>
+
 
                             <!-- Controls -->
                             <a class="left item-control" href="#similar-product" data-slide="prev">
@@ -223,12 +224,13 @@ use yii\helpers\Url;
                             <span>
 									<span>US $<?= $product->price ?></span>
 									<label>Quantity:</label>
-									<input type="text" value="1" id = "qty"/> <!--каличество товара на складе-->
-									<!--<a href="#" data-id="<?/*=$product->id*/?>" class="btn btn-fefault  add-to-cart cart">-->
-                                        <!--предположим что  у пользователя может быть отключен JS и при нажатие на all to
-                                        cart асихронное добовление(происходит блогодоря классу add-to-cart cart) в карзину не сработает,
-                                        в этом случий мы можем написать сылку -->
-                                        <a href="<?= Url::to(['/cart/add', 'id' => $product->id])?>" data-id="<?=$product->id?>" class="btn btn-fefault  add-to-cart cart">
+									<input type="text" value="1" id="qty"/> <!--каличество товара на складе-->
+                                <!--<a href="#" data-id="<? /*=$product->id*/ ?>" class="btn btn-fefault  add-to-cart cart">-->
+                                <!--предположим что  у пользователя может быть отключен JS и при нажатие на all to
+                                cart асихронное добовление(происходит блогодоря классу add-to-cart cart) в карзину не сработает,
+                                в этом случий мы можем написать сылку -->
+                                        <a href="<?= Url::to(['/cart/add', 'id' => $product->id]) ?>"
+                                           data-id="<?= $product->id ?>" class="btn btn-fefault  add-to-cart cart">
                                         <i class="fa fa-shopping-cart"></i>
 										Add to cart
                                     </a>
@@ -240,6 +242,9 @@ use yii\helpers\Url;
                             </p>
                             <a href=""><img src="/images/product-details/share.png" class="share img-responsive"
                                             alt=""/></a>
+                            <?= $product->content ?>
+
+
                         </div><!--/product-information-->
                     </div>
                 </div><!--/product-details-->
@@ -469,9 +474,11 @@ use yii\helpers\Url;
                         <div class="carousel-inner">
 
                             <!--делаем под карточкой товара, рекомендуеммые тавары -->
-                            <?php $count = count($hits); $i = 0; foreach ($hits as $hit):?>
-                            <?php if($i % 3 == 0):?>
-                            <div class="item <?php if ($i == 0) echo 'active' ?>">
+                            <?php $count = count($hits);
+                            $i = 0;
+                            foreach ($hits as $hit): ?>
+                                <?php if ($i % 3 == 0): ?>
+                                    <div class="item <?php if ($i == 0) echo 'active' ?>">
                                 <?php endif; ?>
 
                                 <div class="col-sm-4">
@@ -479,9 +486,9 @@ use yii\helpers\Url;
                                         <div class="single-products">
                                             <div class="productinfo text-center">
                                                 <?= Html::img("@web/images/products/{$hit->img}", ['alt' => $hit->name]) ?>
-                                                <h2>$<?=$hit->price?></h2>
-                                                <p> <a href="<?= Url::to(['product/view', 'id' => $hit->id]) ?>">
-                                                    <?=$hit->name?></a></p>
+                                                <h2>$<?= $hit->price ?></h2>
+                                                <p><a href="<?= Url::to(['product/view', 'id' => $hit->id]) ?>">
+                                                        <?= $hit->name ?></a></p>
                                                 <button type="button" class="btn btn-default add-to-cart"><i
                                                             class="fa fa-shopping-cart"></i>Add to cart
                                                 </button>
@@ -489,10 +496,11 @@ use yii\helpers\Url;
                                         </div>
                                     </div>
                                 </div>
-                                <?php $i++; if ($i % 3 == 0 || $i == $count): ?>
-                            </div>
-                            <?php endif; ?>
-                            <?php endforeach;?>
+                                <?php $i++;
+                                if ($i % 3 == 0 || $i == $count): ?>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
 
                         </div>
                         <a class="left recommended-item-control" href="#recommended-item-carousel"

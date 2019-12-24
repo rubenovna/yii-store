@@ -181,7 +181,17 @@ AppAsset::register($this);
             </div>
         </div><!--/header-bottom-->
     </header><!--/header-->
+
+
     <div class="container">
+
+        <?php if( Yii::$app->session->hasFlash('success') ): ?>
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <?php echo Yii::$app->session->getFlash('success'); ?>
+            </div>
+        <?php endif;?>
+
         <?= $content ?> <!--не могу понять как это переменная связывается с файлом index.php-->
     </div>
 

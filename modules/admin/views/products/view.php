@@ -25,18 +25,34 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
+<?php $img = $model->getImage();?>
+
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
-            'category_id',
+            //'category_id',
+            [ 'attribute' =>'category_id',
+                'value' => function($date){
+                    return $date->category['name'] ? $date->category['name'] : "Сомостоятельная категория" ;
+
+                },
+            ],
+
+
             'name',
-            'content:ntext',
+            'content:html',
             'price',
             'keywords',
             'description',
-            'img',
+            //'img',
+            [
+                'attribute' => 'image',
+                'value' => "<img src='{$img->getUrl()}'>",
+                'format' => 'html',
+            ],
+
             'hit',
             'new',
             'sale',

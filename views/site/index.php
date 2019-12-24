@@ -3,6 +3,14 @@
 /* @var $this yii\web\View */
 
 $this->title = 'My Yii Application';
+
+
+
+
+
+
+
+
 ?>
 
 <section id="slider"><!--slider-->
